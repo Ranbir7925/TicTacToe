@@ -1,12 +1,20 @@
 #!/bin/bash
 echo "Weclcome to the tic-tac-toe game"
 
+#variable
+computerLetter=X
+
 #array declaration of array
 declare -a board
-board=(. . . . . . . . . .)
 
 #Function to reset the board
 function resettingBoard()
+{
+	board=(. . . . . . . . . .)
+}
+
+#Function to display  board
+function displayBoard()
 {
 	echo "***TicTacToe Board***"
 	echo "|  ${board[1]}  ||  ${board[2]}  ||  ${board[3]}  |"
@@ -15,17 +23,34 @@ function resettingBoard()
 	echo "**********************"
 }
 
-function tossToPlay()
-{
-	echo "Tossing coin....."
-	read -p "Press 1:HEADS or 2:TAILS: " choice
-	toss=$((RANDOM%2+1))
-	if (( $toss == $choice ))
-	then
-		echo "You won the toss You will play 1st"
-	else
-		echo "You lost the toss Computer will play 1st"
-	fi
+
+#Function to tossTheCoin
+function tossToPlay() {
+        if [ $((RANDOM%2)) -eq 0 ]
+        then
+                echo "Player will play first."
+                read -p "choose your letter X or O : " letter
+
+                if [[ $letter == $computerLetter ]]
+                then
+                        playerLetter=$letter
+                        computerLetter=O
+                        echo "player letter : $playerLetter"
+                        echo "computer letter : $computerLetter"
+
+                else
+                        playerLetter=$letter
+                        computerLetter=X
+                        echo "player letter : $playerLetter"
+                        echo "computer letter : $computerLetter"
+                fi
+
+
+        else
+                echo "Computer will play first."
+        fi
 }
+
 resettingBoard
+displayBoard
 tossToPlay
