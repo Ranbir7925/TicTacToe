@@ -25,32 +25,55 @@ function displayBoard()
 
 
 #Function to tossTheCoin
-function tossToPlay() {
-        if [ $((RANDOM%2)) -eq 0 ]
-        then
-                echo "Player will play first."
-                read -p "choose your letter X or O : " letter
+function tossToPlay() 
+{
+	echo "Tossing Coin....!!"
+	if [ $((RANDOM%2)) -eq 0 ]
+	then
+		echo -e "Player won toss."
+		read -p "choose your letter X or O : " letter
 
-                if [[ $letter == $computerLetter ]]
-                then
-                        playerLetter=$letter
-                        computerLetter=O
-                        echo "player letter : $playerLetter"
-                        echo "computer letter : $computerLetter"
+		if [[ $letter == $computerLetter ]]
+		then
+			playerLetter=$letter
+			computerLetter=O
+			echo "player letter : $playerLetter"
+			echo "computer letter : $computerLetter"
+		else
+			playerLetter=$letter
+			computerLetter=X
+			echo "player letter : $playerLetter"
+			echo "computer letter : $computerLetter"
+		fi
 
-                else
-                        playerLetter=$letter
-                        computerLetter=X
-                        echo "player letter : $playerLetter"
-                        echo "computer letter : $computerLetter"
-                fi
-
-
-        else
-                echo "Computer will play first."
-        fi
+	else
+		echo -e "Computer won toss\nComputer will play first."
+	fi
 }
 
+
+function switchPlayer()
+{
+	echo "Player Letter: $playerLetter"
+	echo "Computer Letter: $computerLetter"
+	if [[ $switchPlayer == 0 ]]
+	then
+		playerPlaying
+	else
+		computerPlaying
+	fi
+}
+
+
+function playerPlaying()
+{
+	echo "PLayer turn: "
+	read -p "Enter Position between 1 to 9: " position
+	board[$position]=$playerLetter
+	switchPlayer=1
+}
 resettingBoard
-displayBoard
 tossToPlay
+displayBoard
+switchPlayer
+displayBoard
