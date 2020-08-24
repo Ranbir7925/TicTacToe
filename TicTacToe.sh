@@ -24,6 +24,20 @@ function resettingBoard()
 }
 
 
+#Function to display empty fields on board
+function empty()
+{
+	index=0
+	for((i=1;i<=9;i++)){
+	if [[ ${board[$i]} == . ]]
+	then
+		emptyCells[$index]=$i
+		let index++
+	fi
+	}
+}
+
+
 #Function to display  board
 function displayBoard()
 {
@@ -97,7 +111,8 @@ function playerPlaying()
 	displayBoard
 	echo "Player Letter : $playerLetter"
 	echo "Computer Letter : $computerLetter"
-	read -p "Enter Position between 1 to 9: " position
+	echo "Empty Cells :${emptyCells[@]}"
+	read -p "Select your Position: " position
 	turnChange=$playerLetter
 	checkingEmptyCell
 	board[$position]=$playerLetter
@@ -194,7 +209,6 @@ function computerPlayingToBlock()
 				board[$k]=$computerLetter
 				winner=0
 				((count++))
-				displayBoard
 				break
 			else
 				board[$k]="."
@@ -213,7 +227,6 @@ function takeAvailableCorners()
 		then
 			l=$(($l+2))
 		fi
-
 		if [[ ${board[$l]} == . ]]
 		then
 			board[$l]=$computerLetter
@@ -264,7 +277,7 @@ function checkingGameStatus()
 	if [[ $winner -eq 1 ]]
 	then
 		displayBoard
-		echo "Winner is Player who's Letter was:$turnChange"
+		echo "Winner is $turnChange's"
 		exit
 	elif [[ $count -ge $TOTAL_CELL ]]
 	then
@@ -279,6 +292,8 @@ tossToPlay
 
 while [[ $count -ne $TOTAL_CELL ]]
 do
+	empty
 	switchPlayer
 	checkingGameStatus
+	emptyCells=()
 done
