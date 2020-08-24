@@ -243,6 +243,21 @@ function takeCenter()
 }
 
 
+#Function checking for availavble sides
+function takeAvailableSides()
+{
+	for((m=2;m<=8;m+=2))
+	do
+		if [[ ${board[$m]} == . ]]
+		then
+			board[$m]=$computerLetter
+			((count++))
+			break
+		fi
+	done
+}
+
+
 #Function checking Win/Tie
 function checkingGameStatus()
 {
