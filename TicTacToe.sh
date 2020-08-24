@@ -203,6 +203,7 @@ function computerPlayingToBlock()
 	done
 }
 
+
 #Function checking for availavblecorners
 function takeAvailableCorners()
 {
@@ -225,6 +226,7 @@ function takeAvailableCorners()
 }
 
 
+#Function checking for availavble center
 function takeCenter()
 {
 	if [[ $center -ne 1 ]]
@@ -251,7 +253,7 @@ function checkingGameStatus()
 		exit
 	elif [[ $count -ge $TOTAL_CELL ]]
 	then
-		echo "=================="
+		echo "============================="
 		displayBoard
 		echo "TIE...!!"
 	fi
