@@ -1,8 +1,10 @@
 #!/bin/bash
 echo "Weclcome to the tic-tac-toe game"
 
+
 #constant
 TOTAL_CELL=9
+
 
 #variable
 count=0
@@ -10,14 +12,17 @@ switchPlayer=0
 playerLetter=O
 computerLetter=X
 
+
 #array declaration of array
 declare -a board
+
 
 #Function to reset the board
 function resettingBoard()
 {
 	board=(. . . . . . . . . .)
 }
+
 
 #Function to display  board
 function displayBoard()
@@ -58,6 +63,7 @@ function tossToPlay()
 }
 
 
+#Function toswitch between Player and Computer Move
 function switchPlayer()
 {
 	echo "Player Letter: $playerLetter"
@@ -71,6 +77,7 @@ function switchPlayer()
 }
 
 
+#Function for Player playing game
 function playerPlaying()
 {
 	echo "PLayer turn: "
@@ -79,6 +86,8 @@ function playerPlaying()
 	switchPlayer=1
 }
 
+
+#Function for checking empty postion on tic tac toe board
 function checkingEmptyCell()
 {
 	if [[ $position -ge 1 && $position -le 9 ]]
@@ -94,6 +103,8 @@ function checkingEmptyCell()
 	fi
 }
 
+
+#Function checking winning conditions
 function winningCondition()
 {
 	for(( i=1;i<=$TOTAL_CELL;i=$(($i+3)) ))
@@ -124,6 +135,8 @@ function winningCondition()
 
 }
 
+
+#Function checking Win/Tie
 function checkingGameStatus()
 {
 	if [[ $winner -eq 1 ]]
@@ -144,4 +157,3 @@ displayBoard
 switchPlayer
 displayBoard
 checkingGameStatus
-echo $1
