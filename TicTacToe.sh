@@ -63,6 +63,15 @@ function tossToPlay()
 }
 
 
+#Funtion to play computer move
+function computerPlaying()
+{
+	echo "Computer Turn:"
+	computerPlayingToWin
+	computerPlayingToBlock
+}
+
+
 #Function toswitch between Player and Computer Move
 function switchPlayer()
 {
@@ -74,6 +83,7 @@ function switchPlayer()
 	else
 		computerPlaying
 	fi
+	winningCondition $turnChange
 }
 
 
@@ -155,6 +165,29 @@ function computerPlayingToWin()
 				exit
 			else
 				board[$j]="."
+			fi
+		fi
+	done
+}
+
+#Function computer will play to block the player from getting win
+function computerPlayerToBlock() 
+{
+	for((k=1;k<=$TOTAL_CELL;k++))
+	do
+		if [[ ${board[$k]} == . ]]
+		then
+			board[$k]=$playerLetter
+			winningCondition $playerLetter
+			if [[ $winner -eq 1 ]]
+			then
+				board[$k]=$computerLetter
+				winner=0
+				((count++))
+				displayBoard
+				break
+			else
+				board[$k]="."
 			fi
 		fi
 	done
