@@ -8,7 +8,7 @@ TOTAL_CELL=9
 
 #variable
 count=0
-switchPlayer=0
+switchPlayer=1
 playerLetter=O
 computerLetter=X
 
@@ -41,6 +41,7 @@ function tossToPlay()
 	echo "Tossing Coin....!!"
 	if [ $((RANDOM%2)) -eq 0 ]
 	then
+		switchPlayer=0
 		echo -e "Player won toss."
 		read -p "choose your letter X or O : " letter
 
@@ -48,13 +49,9 @@ function tossToPlay()
 		then
 			playerLetter=$letter
 			computerLetter=O
-			echo "player letter : $playerLetter"
-			echo "computer letter : $computerLetter"
 		else
 			playerLetter=$letter
 			computerLetter=X
-			echo "player letter : $playerLetter"
-			echo "computer letter : $computerLetter"
 		fi
 
 	else
@@ -66,17 +63,22 @@ function tossToPlay()
 #Funtion to play computer move
 function computerPlaying()
 {
+	echo "========================="
 	echo "Computer Turn:"
 	computerPlayingToWin
 	computerPlayingToBlock
+	if [[ $block == 0 ]]
+	then
+		takeAvailableCorners
+	fi
+	switchPlayer=0
+	displayBoard
 }
 
 
 #Function toswitch between Player and Computer Move
 function switchPlayer()
 {
-	echo "Player Letter: $playerLetter"
-	echo "Computer Letter: $computerLetter"
 	if [[ $switchPlayer == 0 ]]
 	then
 		playerPlaying
@@ -90,8 +92,14 @@ function switchPlayer()
 #Function for Player playing game
 function playerPlaying()
 {
+	echo "==========================="
 	echo "PLayer turn: "
+	displayBoard
+	echo "Player Letter : $playerLetter"
+	echo "Computer Letter : $computerLetter"
 	read -p "Enter Position between 1 to 9: " position
+	turnChange=$playerLetter
+	checkingEmptyCell
 	board[$position]=$playerLetter
 	switchPlayer=1
 }
@@ -123,7 +131,7 @@ function winningCondition()
 	for(( i=1;i<=$TOTAL_CELL;i=$(($i+3)) ))
 	do
 		#To check winning condition for row
-		if [[ ${board[$i]} == ${board[$i+1]} && ${board[$i+1]} == ${board[$i+2]} && ${board[$i+2]} != "." ]]
+		if [[ ${board[$i]} == ${board[$i+1]} && ${board[$i+1]} == ${board[$i+2]} && ${board[$i+2]} == $1 ]]
 		then
 			winner=1
 		fi
@@ -131,17 +139,17 @@ function winningCondition()
 	for((i=1;i<=3;i++))
 	do
 		#To check winning condition for columns
-		if [[ ${board[$i]} == ${board[$i+3]} && ${board[$i+3]} == ${board[$i+6]} && ${board[$i]} != "." ]]
+		if [[ ${board[$i]} == ${board[$i+3]} && ${board[$i+3]} == ${board[$i+6]} && ${board[$i]} == $1 ]]
 		then
 			winner=1
 		fi
 	done
 	#To check winning condition for Diagonal
-	if [[ ${board[1]} == ${board[5]} && ${board[5]} == ${board[9]} && ${board[5]} != "." ]]
+	if [[ ${board[1]} == ${board[5]} && ${board[5]} == ${board[9]} && ${board[5]} == $1 ]]
 	then
 		winner=1
 	#To check winning condition for columns
-	elif [[ ${board[3]} == ${board[5]} && ${board[5]} == ${board[7]} && ${board[5]} != "." ]]
+	elif [[ ${board[3]} == ${board[5]} && ${board[5]} == ${board[7]} && ${board[5]} == $1 ]]
 	then
 		winner=1
 	fi
@@ -154,24 +162,26 @@ function computerPlayingToWin()
 {
 	for((j=1;j<=$TOTAL_CELL;j++))
 	do
-		if [[ ${board[$j]} == "." ]]
+		if [[ ${board[$j]} == . ]]
 		then
 			board[$j]=$computerLetter
-			winningcondition $computerLetter
+			winningCondition $computerLetter
 			if [[ $winner -eq 1 ]]
 			then
-				displayboard
+				displayBoard
 				echo "Winner is Computer"
 				exit
 			else
 				board[$j]="."
+				block=0
 			fi
 		fi
 	done
 }
 
+
 #Function computer will play to block the player from getting win
-function computerPlayerToBlock() 
+function computerPlayingToBlock() 
 {
 	for((k=1;k<=$TOTAL_CELL;k++))
 	do
@@ -193,25 +203,48 @@ function computerPlayerToBlock()
 	done
 }
 
+#Function checking for availavblecorners
+function takeAvailableCorners()
+{
+	for((l=1;l<=$TOTAL_CELL;l=$l+2))
+	do
+		if [[ $l == 5 ]]
+		then
+			l=$(($l+2))
+		fi
+
+		if [[ ${board[$l]} == . ]]
+		then
+			board[$l]=$computerLetter
+			local center=1
+			((count++))
+			break
+		fi
+	done
+}
+
 
 #Function checking Win/Tie
 function checkingGameStatus()
 {
 	if [[ $winner -eq 1 ]]
 	then
-		echo "Winner is Player"
+		displayBoard
+		echo "Winner is Player who's Letter was:$turnChange"
 		exit
 	elif [[ $count -ge $TOTAL_CELL ]]
 	then
+		echo "=================="
+		displayBoard
 		echo "TIE...!!"
 	fi
 }
 
-
-
 resettingBoard
 tossToPlay
-displayBoard
-switchPlayer
-displayBoard
-checkingGameStatus
+
+while [[ $count -ne $TOTAL_CELL ]]
+do
+	switchPlayer
+	checkingGameStatus
+done
