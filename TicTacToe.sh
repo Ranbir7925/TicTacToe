@@ -221,6 +221,23 @@ function takeAvailableCorners()
 			break
 		fi
 	done
+	takeCenter
+}
+
+
+function takeCenter()
+{
+	if [[ $center -ne 1 ]]
+	then
+		local middle=$(($TOTAL_CELL+1))/2
+		if [[  ${board[$middle]} == . ]]
+		then
+			board[$middle]=$computerLetter
+			((count++))
+		else
+			takeAvailableSides
+		fi
+	fi
 }
 
 
