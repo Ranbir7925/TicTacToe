@@ -1,7 +1,13 @@
 #!/bin/bash
 echo "Weclcome to the tic-tac-toe game"
 
+#constant
+TOTAL_CELL=9
+
 #variable
+count=0
+switchPlayer=0
+playerLetter=O
 computerLetter=X
 
 #array declaration of array
@@ -72,8 +78,70 @@ function playerPlaying()
 	board[$position]=$playerLetter
 	switchPlayer=1
 }
+
+function checkingEmptyCell()
+{
+	if [[ $position -ge 1 && $position -le 9 ]]
+	then
+		if [[ ${board[$position]} == . ]]
+		then
+			echo ".............$turnChange is placed at $position..............."
+			(( count++ ))
+		else
+			echo "Cell is alread occupied...!!!"
+			switchPlayer
+		fi
+	fi
+}
+
+function winningCondition()
+{
+	for(( i=1;i<=$TOTAL_CELL;i=$(($i+3)) ))
+	do
+		#To check winning condition for row
+		if [[ ${board[$i]} == ${board[$i+1]} && ${board[$i+1]} == ${board[$i+2]} && ${board[$i+2]} != "." ]]
+		then
+			winner=1
+		fi
+	done
+	for((i=1;i<=3;i++))
+	do
+		#To check winning condition for columns
+		if [[ ${board[$i]} == ${board[$i+3]} && ${board[$i+3]} == ${board[$i+6]} && ${board[$i]} != "." ]]
+		then
+			winner=1
+		fi
+	done
+	#To check winning condition for Diagonal
+	if [[ ${board[1]} == ${board[5]} && ${board[5]} == ${board[9]} && ${board[5]} != "." ]]
+	then
+		winner=1
+	#To check winning condition for columns
+	elif [[ ${board[3]} == ${board[5]} && ${board[5]} == ${board[7]} && ${board[5]} != "." ]]
+	then
+		winner=1
+	fi
+
+}
+
+function checkingGameStatus()
+{
+	if [[ $winner -eq 1 ]]
+	then
+		echo "Winner is $turnChnage"
+		exit
+	elif [[ $count -ge $TOTAL_CELL ]]
+	then
+		echo "TIE...!!"
+	fi
+}
+
+
+
 resettingBoard
 tossToPlay
 displayBoard
 switchPlayer
 displayBoard
+checkingGameStatus
+echo $1
