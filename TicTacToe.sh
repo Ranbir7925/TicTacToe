@@ -139,12 +139,34 @@ function winningCondition()
 }
 
 
+#Function computer playing to win
+function computerPlayingToWin()
+{
+	for((j=1;j<=$TOTAL_CELL;j++))
+	do
+		if [[ ${board[$j]} == "." ]]
+		then
+			board[$j]=$computerLetter
+			winningcondition $computerLetter
+			if [[ $winner -eq 1 ]]
+			then
+				displayboard
+				echo "Winner is Computer"
+				exit
+			else
+				board[$j]="."
+			fi
+		fi
+	done
+}
+
+
 #Function checking Win/Tie
 function checkingGameStatus()
 {
 	if [[ $winner -eq 1 ]]
 	then
-		echo "Winner is $turnChnage"
+		echo "Winner is Player"
 		exit
 	elif [[ $count -ge $TOTAL_CELL ]]
 	then
