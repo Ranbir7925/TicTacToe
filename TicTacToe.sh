@@ -100,6 +100,9 @@ function checkingEmptyCell()
 			echo "Cell is alread occupied...!!!"
 			switchPlayer
 		fi
+	else
+		echo "Invalid cell Value...!!!"
+		switchPlayer
 	fi
 }
 
